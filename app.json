@@ -19,7 +19,9 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.saisreesatya.Nexil",
+      "permissions": ["BIND_NOTIFICATION_LISTENER_SERVICE"]
     },
     "web": {
       "output": "static",
@@ -27,6 +29,38 @@
     },
     "plugins": [
       "expo-router",
+      "./withAndroidNotificationListener",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Nexil to access your camera to scan QR codes and control the flashlight."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow Nexil to access your microphone to measure sound levels."
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow Nexil to track your steps, device orientation, and environmental data."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysPermission": "Allow Nexil to access your altitude data.",
+          "locationWhenInUsePermission": "Allow Nexil to access your altitude data."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Nexil to use FaceID for security."
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -43,6 +77,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ca8807c1-c2d7-44b1-a01c-3d6dc2760098"
+      }
     }
   }
 }
