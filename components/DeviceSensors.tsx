@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { StyleSheet, Text, View } from 'react-native';
 import { Pedometer, Accelerometer, Barometer, DeviceMotion } from 'expo-sensors';
 import * as Location from 'expo-location';
 import * as Haptics from 'expo-haptics';
 import AIController from '@/services/AIController';
+=======
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Pedometer, Accelerometer, Barometer, DeviceMotion } from 'expo-sensors';
+import * as Location from 'expo-location';
+import * as Haptics from 'expo-haptics';
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
 
 export default function DeviceSensors() {
   const [stepCount, setStepCount] = useState(0);
@@ -27,7 +34,10 @@ export default function DeviceSensors() {
 
     pedometerSubscription = Pedometer.watchStepCount(result => {
       setStepCount(result.steps);
+<<<<<<< HEAD
       AIController.updateSteps(result.steps);
+=======
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
     });
 
     // 2. Orientation (Device Motion)
@@ -37,12 +47,18 @@ export default function DeviceSensors() {
       if (rotation) {
         // Simple orientation logic
         const beta = Math.abs(rotation.beta);
+<<<<<<< HEAD
         let status = 'Tilted/Upright';
         if (beta < 0.2) status = 'Flat (Face Up)';
         else if (beta > 2.8) status = 'Flat (Face Down)';
         
         setOrientation(status);
         AIController.updateOrientation(status);
+=======
+        if (beta < 0.2) setOrientation('Flat (Face Up)');
+        else if (beta > 2.8) setOrientation('Flat (Face Down)');
+        else setOrientation('Tilted/Upright');
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
       }
     });
 
@@ -62,6 +78,7 @@ export default function DeviceSensors() {
       }
     })();
 
+<<<<<<< HEAD
     // 4. Shake Detection
     Accelerometer.setUpdateInterval(100);
     accelSubscription = Accelerometer.addListener(data => {
@@ -72,6 +89,17 @@ export default function DeviceSensors() {
           setLastShake(now);
           AIController.triggerShake();
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+=======
+    // 4. Shake Detection (using Accelerometer)
+    Accelerometer.setUpdateInterval(100);
+    accelSubscription = Accelerometer.addListener(data => {
+      const totalForce = Math.abs(data.x) + Math.abs(data.y) + Math.abs(data.z);
+      if (totalForce > 2.5) { // Shake threshold
+        const now = Date.now();
+        if (now - lastShake > 1000) { // Throttle haptics
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setLastShake(now);
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
         }
       }
     });

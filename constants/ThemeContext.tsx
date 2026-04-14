@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+<<<<<<< HEAD
 type AccentColor = string;
+=======
+type AccentColor = '#000000' | '#3B82F6' | '#10B981' | '#F97316' | '#8B5CF6';
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
 
 interface ThemeContextType {
   accentColor: AccentColor;

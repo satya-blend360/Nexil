@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Haptics from 'expo-haptics';
 import AIController from '@/services/AIController';
+=======
+import React, { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as Haptics from 'expo-haptics';
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
 
 interface TorchToggleProps {
   size?: number;
@@ -15,6 +22,7 @@ export default function TorchToggle({
   onColor = '#000', 
   offColor = '#F0F0F0' 
 }: TorchToggleProps) {
+<<<<<<< HEAD
   const [isTorchOn, setIsTorchOn] = useState(AIController.getTorchStatus());
   const [permission, requestPermission] = useCameraPermissions();
 
@@ -26,15 +34,25 @@ export default function TorchToggle({
     return unsubscribe;
   }, []);
 
+=======
+  const [isTorchOn, setIsTorchOn] = useState(false);
+  const [permission, requestPermission] = useCameraPermissions();
+
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
   const toggleTorch = async () => {
     if (!permission || !permission.granted) {
       const { granted } = await requestPermission();
       if (!granted) return;
     }
 
+<<<<<<< HEAD
     const newStatus = !isTorchOn;
     setIsTorchOn(newStatus);
     AIController.setTorch(newStatus);
+=======
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setIsTorchOn(!isTorchOn);
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
   };
 
   return (

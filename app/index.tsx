@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
 import { StyleSheet, Text, View, StatusBar, ScrollView, TouchableOpacity } from 'react-native';
+=======
+import { StyleSheet, Text, View, StatusBar, ScrollView } from 'react-native';
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack } from 'expo-router';
 import TorchToggle from '@/components/TorchToggle';
@@ -13,6 +17,7 @@ import ToolsUtilities from '@/components/ToolsUtilities';
 import PersonalProductivity from '@/components/PersonalProductivity';
 import ThemeCustomizer from '@/components/ThemeCustomizer';
 import NotificationHub from '@/components/NotificationHub';
+<<<<<<< HEAD
 import AIFriendOrb from '@/components/AIFriendOrb';
 import AICommandInput from '@/components/AICommandInput';
 import { useTheme } from '@/constants/ThemeContext';
@@ -28,11 +33,18 @@ export default function HomeScreen() {
   React.useEffect(() => {
     return AIController.onScanRequest(setIsScanning);
   }, []);
+=======
+import { useTheme } from '@/constants/ThemeContext';
+
+export default function HomeScreen() {
+  const { accentColor, isDarkMode } = useTheme();
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#FFF' }]} edges={['top', 'left', 'right']}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Stack.Screen options={{ headerShown: false }} />
+<<<<<<< HEAD
 
       {isScanning && (
         <View style={styles.scannerOverlay}>
@@ -42,6 +54,8 @@ export default function HomeScreen() {
           </CameraView>
         </View>
       )}
+=======
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
       
       <ScrollView 
         contentContainerStyle={styles.scrollContent}
@@ -52,6 +66,7 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.mainControl}>
+<<<<<<< HEAD
           <AIFriendOrb 
             emotion={emotion} 
             isSpeaking={isSpeaking} 
@@ -95,6 +110,10 @@ export default function HomeScreen() {
             <TorchToggle size={80} onColor={accentColor} />
             <BatteryStatus />
           </View>
+=======
+          <TorchToggle size={120} onColor={accentColor} />
+          <BatteryStatus />
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
         </View>
 
         <View style={[styles.divider, { backgroundColor: isDarkMode ? '#222' : '#F0F0F0' }]} />
@@ -154,6 +173,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+<<<<<<< HEAD
     width: '100%',
   },
   topControlRow: {
@@ -197,6 +217,8 @@ const styles = StyleSheet.create({
   statBarFill: {
     height: '100%',
     borderRadius: 2,
+=======
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
   },
   divider: {
     width: '80%',
@@ -211,6 +233,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: -20,
     marginTop: 20,
+<<<<<<< HEAD
   },
   scannerOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -239,5 +262,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 4,
+=======
+>>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
   }
 });
