@@ -1,29 +1,25 @@
-import React from 'react';
-<<<<<<< HEAD
-import { StyleSheet, Text, View, StatusBar, ScrollView, TouchableOpacity } from 'react-native';
-=======
-import { StyleSheet, Text, View, StatusBar, ScrollView } from 'react-native';
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack } from 'expo-router';
-import TorchToggle from '@/components/TorchToggle';
+import AICommandInput from '@/components/AICommandInput';
+import AIFriendOrb from '@/components/AIFriendOrb';
 import BatteryStatus from '@/components/BatteryStatus';
+import ConnectivityStorage from '@/components/ConnectivityStorage';
+import DevConnectionMonitor from '@/components/DevConnectionMonitor';
 import DeviceSensors from '@/components/DeviceSensors';
 import DisplayAudio from '@/components/DisplayAudio';
-import ConnectivityStorage from '@/components/ConnectivityStorage';
-import SecurityIntelligence from '@/components/SecurityIntelligence';
 import EnvironmentalSensors from '@/components/EnvironmentalSensors';
-import ToolsUtilities from '@/components/ToolsUtilities';
-import PersonalProductivity from '@/components/PersonalProductivity';
-import ThemeCustomizer from '@/components/ThemeCustomizer';
 import NotificationHub from '@/components/NotificationHub';
-<<<<<<< HEAD
-import AIFriendOrb from '@/components/AIFriendOrb';
-import AICommandInput from '@/components/AICommandInput';
+import PersonalProductivity from '@/components/PersonalProductivity';
+import SecurityIntelligence from '@/components/SecurityIntelligence';
+import ThemeCustomizer from '@/components/ThemeCustomizer';
+import ToolsUtilities from '@/components/ToolsUtilities';
+import TorchToggle from '@/components/TorchToggle';
 import { useTheme } from '@/constants/ThemeContext';
 import { useAI } from '@/hooks/useAI';
-import { CameraView } from 'expo-camera';
 import AIController from '@/services/AIController';
+import { CameraView } from 'expo-camera';
+import { Stack } from 'expo-router';
+import React from 'react';
+import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const { accentColor, isDarkMode } = useTheme();
@@ -33,18 +29,17 @@ export default function HomeScreen() {
   React.useEffect(() => {
     return AIController.onScanRequest(setIsScanning);
   }, []);
-=======
-import { useTheme } from '@/constants/ThemeContext';
-
-export default function HomeScreen() {
-  const { accentColor, isDarkMode } = useTheme();
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#FFF' }]} edges={['top', 'left', 'right']}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Stack.Screen options={{ headerShown: false }} />
-<<<<<<< HEAD
+
+      {/* Development Connection Monitor - only active in dev mode */}
+      <DevConnectionMonitor
+        onConnectionLost={() => console.log('Dev connection lost')}
+        onConnectionRestored={() => console.log('Dev connection restored')}
+      />
 
       {isScanning && (
         <View style={styles.scannerOverlay}>
@@ -54,10 +49,8 @@ export default function HomeScreen() {
           </CameraView>
         </View>
       )}
-=======
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
-      
-      <ScrollView 
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
@@ -66,17 +59,16 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.mainControl}>
-<<<<<<< HEAD
-          <AIFriendOrb 
-            emotion={emotion} 
-            isSpeaking={isSpeaking} 
-            onPress={interact} 
+          <AIFriendOrb
+            emotion={emotion}
+            isSpeaking={isSpeaking}
+            onPress={interact}
           />
-          
-          <AICommandInput 
-            onSend={sendMessage} 
-            isSpeaking={isSpeaking} 
-            accentColor={accentColor} 
+
+          <AICommandInput
+            onSend={sendMessage}
+            isSpeaking={isSpeaking}
+            accentColor={accentColor}
           />
 
           {lastMessage && (
@@ -110,10 +102,6 @@ export default function HomeScreen() {
             <TorchToggle size={80} onColor={accentColor} />
             <BatteryStatus />
           </View>
-=======
-          <TorchToggle size={120} onColor={accentColor} />
-          <BatteryStatus />
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
         </View>
 
         <View style={[styles.divider, { backgroundColor: isDarkMode ? '#222' : '#F0F0F0' }]} />
@@ -145,7 +133,7 @@ export default function HomeScreen() {
 
         {/* Section 8: Security & Intelligence */}
         <SecurityIntelligence />
-        
+
         <View style={{ height: 60 }} />
       </ScrollView>
     </SafeAreaView>
@@ -173,7 +161,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
-<<<<<<< HEAD
     width: '100%',
   },
   topControlRow: {
@@ -217,8 +204,6 @@ const styles = StyleSheet.create({
   statBarFill: {
     height: '100%',
     borderRadius: 2,
-=======
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
   },
   divider: {
     width: '80%',
@@ -233,7 +218,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: -20,
     marginTop: 20,
-<<<<<<< HEAD
   },
   scannerOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -262,7 +246,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 4,
-=======
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
   }
 });

@@ -3,11 +3,11 @@
   "main": "index.js",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
+    "android": "set NODE_OPTIONS=--openssl-legacy-provider && expo run:android",
+    "ios": "set NODE_OPTIONS=--openssl-legacy-provider && expo run:ios",
+    "web": "set NODE_OPTIONS=--openssl-legacy-provider && expo start --web",
     "lint": "expo lint"
   },
   "dependencies": {
@@ -17,12 +17,9 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@types/luxon": "^3.7.1",
-<<<<<<< HEAD
     "axios": "^1.15.0",
-=======
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
     "expo": "~54.0.33",
-    "expo-av": "~16.0.8",
+    "expo-audio": "~1.1.1",
     "expo-battery": "~10.0.8",
     "expo-brightness": "~14.0.8",
     "expo-camera": "~17.0.10",
@@ -39,14 +36,12 @@
     "expo-network": "~8.0.8",
     "expo-router": "~6.0.23",
     "expo-sensors": "~15.0.8",
-<<<<<<< HEAD
-    "expo-speech": "^55.0.13",
-=======
->>>>>>> 7c7837d88a9248518e6399d5a8bc04ada2517257
+    "expo-speech": "~14.0.8",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-symbols": "~1.0.8",
     "expo-system-ui": "~6.0.9",
+    "expo-video": "~3.0.16",
     "expo-web-browser": "~15.0.10",
     "luxon": "^3.7.2",
     "react": "19.1.0",
