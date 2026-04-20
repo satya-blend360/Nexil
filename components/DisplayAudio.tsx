@@ -1,15 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Switch } from 'react-native';
 import * as Brightness from 'expo-brightness';
-import { useKeepAwake } from 'expo-keep-awake';
 import * as Haptics from 'expo-haptics';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 
 export default function DisplayAudio() {
   const [brightness, setBrightness] = useState(0);
   const [isKeepAwake, setIsKeepAwake] = useState(false);
 
-  // Keep Awake logic
-  if (isKeepAwake) useKeepAwake();
+  // Keep Awake logic - using async functions instead of conditional hook
+  useEffect(() => {
+    if (isKeepAwake) {
+      activateKeepAwakeAsync('nexil-keep-awake').catch(console.warn);
+    } else {
+      deactivateKeepAwake('nexil-keep-awake');
+    }
+
+    return () => {
+      deactivateKeepAwake('nexil-keep-awake');
+    };
+  }, [isKeepAwake]);
 
   useEffect(() => {
     (async () => {
@@ -38,7 +48,7 @@ export default function DisplayAudio() {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>DISPLAY & AUDIO</Text>
-      
+
       <View style={styles.card}>
         <Text style={styles.label}>SCREEN BRIGHTNESS</Text>
         <View style={styles.sliderContainer}>
@@ -57,13 +67,13 @@ export default function DisplayAudio() {
       <View style={styles.row}>
         <View style={[styles.miniCard, { flex: 1 }]}>
           <Text style={styles.label}>KEEP AWAKE</Text>
-          <Switch 
-            value={isKeepAwake} 
-            onValueChange={setIsKeepAwake} 
+          <Switch
+            value={isKeepAwake}
+            onValueChange={setIsKeepAwake}
             trackColor={{ false: '#F0F0F0', true: '#000' }}
           />
         </View>
-        
+
         <View style={[styles.miniCard, { flex: 2 }]}>
           <Text style={styles.label}>HAPTIC TEST</Text>
           <View style={styles.hapticRow}>

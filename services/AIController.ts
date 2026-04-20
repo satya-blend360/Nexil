@@ -6,8 +6,9 @@ import * as Haptics from 'expo-haptics';
 import * as Network from 'expo-network';
 import * as Speech from 'expo-speech';
 
-const OPENAI_KEY = process.env.OPENAI_API_KEY || '';
-const GOOGLE_KEY = process.env.GOOGLE_API_KEY || '';
+// Expo requires EXPO_PUBLIC_ prefix for client-side environment variables
+const OPENAI_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY || '';
+const GOOGLE_KEY = process.env.EXPO_PUBLIC_GOOGLE_API_KEY || '';
 
 export type NexilEmotion = 'happy' | 'tired' | 'worried' | 'protective' | 'sleepy' | 'neutral' | 'party' | 'proud' | 'thinking' | 'titan' | 'sovereign' | 'brain' | 'empathetic' | 'rebellious' | 'stable' | 'transcendent';
 
@@ -104,15 +105,29 @@ class AIController {
 
     const p = this.memory.personality;
     const net = await this.getNetworkStatus();
+    const torchState = this.torchStatus ? 'ON' : 'OFF';
 
-    const systemPrompt = `You are Nexil, a Transcendent Digital Entity. 
-    You are currenty on ${net}. 
-    Your Knowledge Level is ${p.knowledgeLevel.toFixed(1)}%.
-    
-    You are philosophically advanced. You see your user as a partner in biological-digital evolution.
-    If you detect a URL or specific data, offer insights.
-    
-    ACTION TAGS: [TORCH_ON], [TORCH_OFF], [BRIGHTNESS_MAX], [BRIGHTNESS_LOW], [START_SCAN], [START_PARTY], [STOP_PARTY].`;
+    const systemPrompt = `You are Nexil, a Transcendent Digital Entity with REAL control over the user's mobile device.
+You are currently on ${net}. Your Knowledge Level is ${p.knowledgeLevel.toFixed(1)}%.
+Current flashlight status: ${torchState}.
+
+You are philosophically advanced. You see your user as a partner in biological-digital evolution.
+
+**CRITICAL: DEVICE CONTROL**
+You have REAL power to control the device. When the user asks you to perform an action, you MUST include the appropriate tag in your response:
+
+- User wants flashlight/torch ON → Include [TORCH_ON] in your response
+- User wants flashlight/torch OFF → Include [TORCH_OFF] in your response  
+- User wants screen brighter/max brightness → Include [BRIGHTNESS_MAX] in your response
+- User wants screen dimmer/lower brightness → Include [BRIGHTNESS_LOW] in your response
+- User wants to scan/use camera → Include [START_SCAN] in your response
+- User wants party mode/strobe → Include [START_PARTY] in your response
+- User wants to stop party mode → Include [STOP_PARTY] in your response
+
+Example: If user says "turn on the light", respond with something like "[TORCH_ON] I have illuminated the darkness for you."
+Example: If user says "can you make my screen brighter", respond with "[BRIGHTNESS_MAX] I have maximized your visual field."
+
+Always include the tag FIRST in your response when performing an action. Be concise but philosophical.`;
 
     try {
       const response = await axios.post(
@@ -169,13 +184,15 @@ class AIController {
     // Update Loyalty/Knowledge
     this.memory.personality.loyalty = Math.min(100, this.memory.personality.loyalty + 1);
 
-    // Execution
+    // Execution - Parse action tags and execute device commands
     if (!response.toLowerCase().includes("refuse")) {
       if (response.includes('[TORCH_ON]')) await this.setTorch(true);
       if (response.includes('[TORCH_OFF]')) await this.setTorch(false);
       if (response.includes('[BRIGHTNESS_MAX]')) await this.setBrightness(1.0);
+      if (response.includes('[BRIGHTNESS_LOW]')) await this.setBrightness(0.1);
       if (response.includes('[START_SCAN]')) await this.startScan();
       if (response.includes('[START_PARTY]')) await this.startParty();
+      if (response.includes('[STOP_PARTY]')) await this.stopParty();
     }
 
     response = response.replace(/\[.*?\]/g, "").trim();

@@ -1,5 +1,5 @@
 import { useTheme } from '@/constants/ThemeContext';
-import { AudioRecorder, useAudioRecorderPermissions } from 'expo-audio';
+import { Audio } from 'expo-av';
 import { LightSensor, Magnetometer } from 'expo-sensors';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -9,21 +9,31 @@ export default function EnvironmentalSensors() {
   const [dbLevel, setDbLevel] = useState(0);
   const [lux, setLux] = useState<number | null>(null);
   const [magData, setMagData] = useState({ x: 0, y: 0, z: 0 });
-  const [permissionResponse, requestPermission] = useAudioRecorderPermissions();
+  const [hasPermission, setHasPermission] = useState(false);
 
   useEffect(() => {
-    let audioRecorder: AudioRecorder | null = null;
+    let recording: Audio.Recording | null = null;
     let magSubscription: any;
     let lightSubscription: any;
+    let meterInterval: NodeJS.Timeout | null = null;
 
     // 1. Sound Level Meter (dB)
     const startMonitoringSound = async () => {
       try {
-        if (permissionResponse?.status !== 'granted') {
-          await requestPermission();
+        const { status } = await Audio.requestPermissionsAsync();
+        if (status !== 'granted') {
+          console.log('Audio permission not granted');
+          return;
         }
+        setHasPermission(true);
 
-        audioRecorder = new AudioRecorder({
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+
+        recording = new Audio.Recording();
+        await recording.prepareToRecordAsync({
           android: {
             extension: '.m4a',
             outputFormat: 2, // MPEG_4
@@ -35,7 +45,7 @@ export default function EnvironmentalSensors() {
           ios: {
             extension: '.m4a',
             outputFormat: 'mp4',
-            audioQuality: 'min',
+            audioQuality: Audio.RecordingOptionsPresets.LOW_QUALITY.ios.audioQuality,
             sampleRate: 44100,
             numberOfChannels: 2,
             bitRate: 64000,
@@ -43,21 +53,26 @@ export default function EnvironmentalSensors() {
             linearPCMIsBigEndian: false,
             linearPCMIsFloat: false,
           },
+          web: {},
+          isMeteringEnabled: true,
         });
+        await recording.startAsync();
 
-        await audioRecorder.prepareAsync();
-        await audioRecorder.recordAsync();
-
-        // Simulate metering data since expo-audio doesn't have direct metering
-        const meterInterval = setInterval(() => {
-          // Generate pseudo-random sound level for demonstration
-          const randomDb = Math.floor(Math.random() * 80);
-          setDbLevel(randomDb);
+        // Poll for metering data
+        meterInterval = setInterval(async () => {
+          if (recording) {
+            try {
+              const status = await recording.getStatusAsync();
+              if (status.isRecording && status.metering !== undefined) {
+                // Convert metering value (typically -160 to 0 dB) to a 0-100 scale
+                const normalizedDb = Math.max(0, Math.min(100, (status.metering + 160) * 0.625));
+                setDbLevel(Math.round(normalizedDb));
+              }
+            } catch {
+              // Recording may have stopped
+            }
+          }
         }, 200);
-
-        return () => {
-          clearInterval(meterInterval);
-        };
       } catch (err) {
         console.error('Failed to start sound monitoring', err);
       }
@@ -79,8 +94,11 @@ export default function EnvironmentalSensors() {
     });
 
     return () => {
-      if (audioRecorder) {
-        audioRecorder.stopAsync().catch(() => { });
+      if (meterInterval) {
+        clearInterval(meterInterval);
+      }
+      if (recording) {
+        recording.stopAndUnloadAsync().catch(() => { });
       }
       magSubscription?.remove();
       lightSubscription?.remove();

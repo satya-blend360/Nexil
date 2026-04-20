@@ -17,13 +17,28 @@ export default function TorchToggle({
   const [isTorchOn, setIsTorchOn] = useState(AIController.getTorchStatus());
   const [permission, requestPermission] = useCameraPermissions();
 
+  // Auto-request permission on mount so AI can control torch
+  useEffect(() => {
+    if (!permission?.granted) {
+      requestPermission();
+    }
+  }, [permission]);
+
   useEffect(() => {
     // Listen for AI-triggered torch changes
-    const unsubscribe = AIController.onTorchChange((status) => {
-      setIsTorchOn(status);
+    const unsubscribe = AIController.onTorchChange(async (status) => {
+      // If AI triggers torch but we don't have permission, request it
+      if (status && !permission?.granted) {
+        const result = await requestPermission();
+        if (result.granted) {
+          setIsTorchOn(status);
+        }
+      } else {
+        setIsTorchOn(status);
+      }
     });
     return unsubscribe;
-  }, []);
+  }, [permission]);
 
   const toggleTorch = async () => {
     if (!permission || !permission.granted) {
@@ -38,9 +53,10 @@ export default function TorchToggle({
 
   return (
     <View style={styles.container}>
+      {/* Always render CameraView when permission granted - required for torch control */}
       {permission?.granted && (
         <CameraView
-          style={{ width: 0, height: 0, position: 'absolute' }}
+          style={{ width: 1, height: 1, position: 'absolute', opacity: 0 }}
           enableTorch={isTorchOn}
           facing="back"
         />

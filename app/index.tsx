@@ -1,5 +1,6 @@
 import AICommandInput from '@/components/AICommandInput';
 import AIFriendOrb from '@/components/AIFriendOrb';
+import AlwaysOnMode from '@/components/AlwaysOnMode';
 import BatteryStatus from '@/components/BatteryStatus';
 import ConnectivityStorage from '@/components/ConnectivityStorage';
 import DevConnectionMonitor from '@/components/DevConnectionMonitor';
@@ -133,6 +134,9 @@ export default function HomeScreen() {
 
         {/* Section 8: Security & Intelligence */}
         <SecurityIntelligence />
+
+        {/* Section 9: 24/7 Always-On Mode */}
+        <AlwaysOnMode />
 
         <View style={{ height: 60 }} />
       </ScrollView>
